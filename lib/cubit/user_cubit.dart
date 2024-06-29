@@ -1,12 +1,16 @@
+import 'package:my_auth/core/api/end_points.dart';
+import 'package:my_auth/core/errors/exceptions.dart';
 import 'package:my_auth/cubit/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../core/api/api_consumer.dart';
+
 
 class UserCubit extends Cubit<UserState> {
-
-  UserCubit() : super(UserInitial());
+final ApiConsumer api ;
+  UserCubit({required this.api}) : super(UserInitial());
 
   //Sign in Form key
   GlobalKey<FormState> signInFormKey = GlobalKey();
@@ -38,6 +42,17 @@ class UserCubit extends Cubit<UserState> {
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
 
-
+signIn()async{
+  try {
+    emit(SignInLoading());
+    final response = await api.post(EndPoint.signIn,data: {
+      ApiKeys.email : signInEmail.text,
+      ApiKeys.password : signInPassword.text,
+    },);
+    emit(SignInSuccess());
+  } on ServerException catch (e) {
+    emit(SignInFailure(errMessage: e.errorModel.errorMessage));
+  }
+}
 
 }
