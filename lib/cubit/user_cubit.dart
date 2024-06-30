@@ -1,3 +1,5 @@
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:my_auth/cach/cache_helper.dart';
 import 'package:my_auth/core/api/end_points.dart';
 import 'package:my_auth/core/errors/exceptions.dart';
 import 'package:my_auth/cubit/user_state.dart';
@@ -6,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_auth/models/signIn_model.dart';
 import 'package:my_auth/models/signUp_model.dart';
-
 import '../core/api/api_consumer.dart';
 
 class UserCubit extends Cubit<UserState> {
@@ -44,6 +45,8 @@ class UserCubit extends Cubit<UserState> {
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
 
+  SignInModel? user;
+
   signIn() async {
     try {
       emit(SignInLoading());
@@ -54,7 +57,12 @@ class UserCubit extends Cubit<UserState> {
           ApiKeys.password: signInPassword.text,
         },
       );
-      emit(SignInSuccess());
+      user = SignInModel.fromJson(response);
+      final decodedToken = JwtDecoder.decode(user!.token);
+      print(decodedToken['id']);
+      emit(SignInSuccess(message: user!.message));
+      CacheHelper().saveData(key: ApiKeys.token, value: user!.token);
+      CacheHelper().saveData(key: ApiKeys.id, value: decodedToken[ApiKeys.id]);
     } on ServerException catch (e) {
       emit(SignInFailure(errMessage: e.errorModel.errorMessage));
     }
@@ -72,7 +80,7 @@ class UserCubit extends Cubit<UserState> {
         EndPoint.signUp,
         isFormData: true,
         data: {
-          ApiKeys.name : signUpName.text,
+          ApiKeys.name: signUpName.text,
           ApiKeys.email: signUpEmail.text,
           ApiKeys.password: signUpPassword.text,
           ApiKeys.phone: signUpPhoneNumber.text,
@@ -85,7 +93,7 @@ class UserCubit extends Cubit<UserState> {
       final SignUpModel signUpModel = SignUpModel.fromJson(response);
       emit(SignUpSuccess(message: signUpModel.message));
     } on ServerException catch (e) {
-    emit(SignUpFailure(errMessage: e.errorModel.errorMessage));
+      emit(SignUpFailure(errMessage: e.errorModel.errorMessage));
     }
   }
 }

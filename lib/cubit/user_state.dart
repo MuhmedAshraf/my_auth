@@ -1,7 +1,12 @@
  class UserState {}
  class UserInitial extends UserState {}
  class SignInLoading extends UserState {}
- class SignInSuccess extends UserState {}
+ class SignInSuccess extends UserState {
+ final String message;
+
+  SignInSuccess({required this.message});
+
+ }
  class SignInFailure extends UserState {
  final String errMessage;
 

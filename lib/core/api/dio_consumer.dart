@@ -9,6 +9,14 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}){
     dio.options.baseUrl = EndPoint.baseUrl;
+    dio.interceptors.add(LogInterceptor(
+      requestHeader: true,
+      request: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    ));
   }
 
 
@@ -40,6 +48,7 @@ class DioConsumer extends ApiConsumer {
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
+      return response.data;
     } on DioException catch (e) {
       handleDioExceptions(e);
     }
@@ -56,6 +65,7 @@ class DioConsumer extends ApiConsumer {
         data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
+      return response.data;
     } on DioException catch (e) {
       handleDioExceptions(e);
     }
@@ -70,6 +80,7 @@ class DioConsumer extends ApiConsumer {
         data: data,
         queryParameters: queryParameters,
       );
+      return response.data;
     } on DioException catch (e) {
       handleDioExceptions(e);
     }
