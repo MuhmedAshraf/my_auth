@@ -10,9 +10,20 @@
  //-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
 
  class SignUpLoading extends UserState {}
- class SignUpSuccess extends UserState {}
+ class SignUpSuccess extends UserState {
+ final String message;
+
+  SignUpSuccess({required this.message});
+
+ }
  class SignUpFailure extends UserState {
   final String errMessage;
 
   SignUpFailure({required this.errMessage});
  }
+
+
+ //-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
+
+class UploadProfilePic extends UserState{}
+ //-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
