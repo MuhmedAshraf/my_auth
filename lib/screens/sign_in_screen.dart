@@ -23,6 +23,7 @@ class SignInScreen extends StatelessWidget {
           if (state is SignInSuccess) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.message)));
+            context.read<UserCubit>().getUserData();
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const ProfileScreen()));
           } else if (state is SignInFailure) {

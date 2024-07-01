@@ -1,5 +1,6 @@
 import 'package:my_auth/core/api/api_consumer.dart';
 import 'package:dio/dio.dart';
+import 'package:my_auth/core/api/api_interceptors.dart';
 import 'package:my_auth/core/api/end_points.dart';
 
 import '../errors/exceptions.dart';
@@ -9,6 +10,7 @@ class DioConsumer extends ApiConsumer {
 
   DioConsumer({required this.dio}){
     dio.options.baseUrl = EndPoint.baseUrl;
+    dio.interceptors.add(ApiInterceptor());
     dio.interceptors.add(LogInterceptor(
       requestHeader: true,
       request: true,

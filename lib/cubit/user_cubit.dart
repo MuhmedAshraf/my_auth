@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_auth/models/signIn_model.dart';
 import 'package:my_auth/models/signUp_model.dart';
+import 'package:my_auth/models/user_model.dart';
 import '../core/api/api_consumer.dart';
 
 class UserCubit extends Cubit<UserState> {
@@ -94,6 +95,21 @@ class UserCubit extends Cubit<UserState> {
       emit(SignUpSuccess(message: signUpModel.message));
     } on ServerException catch (e) {
       emit(SignUpFailure(errMessage: e.errorModel.errorMessage));
+    }
+  }
+
+  getUserData() async {
+    try {
+      emit(UserDataLoading());
+      final response = await api.get(
+          EndPoint.getUserDataEndPoint(CacheHelper().getData(key: ApiKeys.id)));
+      emit(
+        UserDataSuccess(
+          user: UserModel.fromJson(response),
+        ),
+      );
+    } on ServerException catch (e) {
+      emit(UserDataFailure(errMessage: e.errorModel.errorMessage));
     }
   }
 }

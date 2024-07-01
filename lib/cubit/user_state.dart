@@ -1,4 +1,6 @@
- class UserState {}
+ import '../models/user_model.dart';
+
+class UserState {}
  class UserInitial extends UserState {}
  class SignInLoading extends UserState {}
  class SignInSuccess extends UserState {
@@ -32,3 +34,15 @@
 
 class UploadProfilePic extends UserState{}
  //-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
+class UserDataLoading extends UserState{}
+class UserDataSuccess extends UserState{
+ final UserModel user ;
+
+  UserDataSuccess({required this.user});
+}
+class UserDataFailure extends UserState{
+ final String errMessage;
+
+  UserDataFailure({required this.errMessage});
+
+}
