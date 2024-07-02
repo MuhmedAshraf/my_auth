@@ -46,3 +46,16 @@ class UserDataFailure extends UserState{
   UserDataFailure({required this.errMessage});
 
 }
+
+ //-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
+class UpdateLoading extends UserState{}
+class UpdateSuccess extends UserState{
+ final String message;
+
+  UpdateSuccess({required this.message});
+}
+class UpdateFailure extends UserState{
+ final String errMessage;
+
+  UpdateFailure({required this.errMessage});
+}

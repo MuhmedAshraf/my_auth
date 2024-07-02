@@ -42,7 +42,7 @@ class PickImageWidget extends StatelessWidget {
                               child: GestureDetector(
                                 onTap: () {
                                   ImagePicker()
-                                      .pickImage(source: ImageSource.camera)
+                                      .pickImage(source: ImageSource.gallery)
                                       .then((value) => context
                                           .read<UserCubit>()
                                           .uploadProfilePic(value!));

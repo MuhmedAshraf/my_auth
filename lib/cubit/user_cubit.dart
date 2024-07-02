@@ -2,12 +2,14 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:my_auth/cach/cache_helper.dart';
 import 'package:my_auth/core/api/end_points.dart';
 import 'package:my_auth/core/errors/exceptions.dart';
+import 'package:my_auth/core/function/uploadImageToApi.dart';
 import 'package:my_auth/cubit/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_auth/models/signIn_model.dart';
 import 'package:my_auth/models/signUp_model.dart';
+import 'package:my_auth/models/update_model.dart';
 import 'package:my_auth/models/user_model.dart';
 import '../core/api/api_consumer.dart';
 
@@ -45,6 +47,12 @@ class UserCubit extends Cubit<UserState> {
 
   //Sign up confirm password
   TextEditingController confirmPassword = TextEditingController();
+
+  //update name
+  TextEditingController newName = TextEditingController();
+
+  //update Phone
+  TextEditingController newPhone = TextEditingController();
 
   SignInModel? user;
 
@@ -88,7 +96,7 @@ class UserCubit extends Cubit<UserState> {
           ApiKeys.confirmPassword: confirmPassword.text,
           ApiKeys.location:
               '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
-          ApiKeys.profilePic: await uploadProfilePic(profilePic!),
+          ApiKeys.profilePic: await uploadImageToApi(profilePic!),
         },
       );
       final SignUpModel signUpModel = SignUpModel.fromJson(response);
@@ -110,6 +118,31 @@ class UserCubit extends Cubit<UserState> {
       );
     } on ServerException catch (e) {
       emit(UserDataFailure(errMessage: e.errorModel.errorMessage));
+    }
+  }
+
+  updateUserInfo() async {
+    try {
+      emit(UpdateLoading());
+      final response = await api.patch(
+        EndPoint.update,
+        isFormData: true,
+        data: {
+          ApiKeys.name: newName.text.isEmpty
+              ? CacheHelper().getData(key: ApiKeys.name)
+              : newName.text,
+          ApiKeys.phone: newPhone.text.isEmpty
+              ? CacheHelper().getData(key: ApiKeys.id)
+              : newPhone.text,
+          ApiKeys.location:
+              '{"name":"methalfa","address":"meet halfa","coordinates":[30.1572709,31.224779]}',
+          ApiKeys.profilePic: await uploadImageToApi(profilePic!),
+        },
+      );
+      final UpdateModel updateModel = UpdateModel.fromJson(response);
+      emit(UpdateSuccess(message: updateModel.message));
+    } on ServerException catch (e) {
+      emit(UpdateFailure(errMessage: e.errorModel.errorMessage));
     }
   }
 }

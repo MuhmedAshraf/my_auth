@@ -46,7 +46,7 @@ class SignUpScreen extends StatelessWidget {
                 key: context.read<UserCubit>().signUpFormKey,
                 child: Column(
                   children: [
-                    const PageHeader(),
+                     PageHeader(),
                     const PageHeading(title: 'Sign-up'),
                     //! Image
                     const PickImageWidget(),
