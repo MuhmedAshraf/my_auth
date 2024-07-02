@@ -7,6 +7,7 @@ import 'package:my_auth/cubit/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_auth/models/logOut_model.dart';
 import 'package:my_auth/models/signIn_model.dart';
 import 'package:my_auth/models/signUp_model.dart';
 import 'package:my_auth/models/update_model.dart';
@@ -143,6 +144,17 @@ class UserCubit extends Cubit<UserState> {
       emit(UpdateSuccess(message: updateModel.message));
     } on ServerException catch (e) {
       emit(UpdateFailure(errMessage: e.errorModel.errorMessage));
+    }
+  }
+
+  logOut()async{
+    try {
+      emit(LogOutLoading());
+      final response = await api.get(EndPoint.logOut);
+      LogOutModel logOutModel= LogOutModel.fromJson(response);
+      emit(LogOutSuccess(message: logOutModel.message));
+    } on ServerException catch (e) {
+      emit(LogOutFailure(errMessage: e.errorModel.errorMessage));
     }
   }
 }

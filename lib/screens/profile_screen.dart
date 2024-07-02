@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_auth/cubit/user_cubit.dart';
 import 'package:my_auth/cubit/user_state.dart';
+import 'package:my_auth/screens/sign_in_screen.dart';
+import 'package:my_auth/screens/sign_up_screen.dart';
 import 'package:my_auth/screens/update_user_screen.dart';
 
 import '../widgets/custom_form_button.dart';
@@ -11,11 +13,21 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isProfileImage = false;
     return SafeArea(
       child: BlocConsumer<UserCubit, UserState>(
         listener: (context, state) {
           if (state is UserDataFailure) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errMessage)));
+          }
+          if (state is LogOutSuccess) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+            );
+          } else if (state is LogOutFailure) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errMessage)));
           }
@@ -78,6 +90,19 @@ class ProfileScreen extends StatelessWidget {
                               },
                             ),
                           ),
+                          const SizedBox(height: 40),
+                          state is LogOutLoading
+                              ? const CircularProgressIndicator()
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: CustomFormButton(
+                                    innerText: 'Log Out',
+                                    onPressed: () {
+                                      context.read<UserCubit>().logOut();
+                                    },
+                                  ),
+                                ),
                         ],
                       )
                     : Container(),
