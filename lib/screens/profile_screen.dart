@@ -5,6 +5,7 @@ import 'package:my_auth/cubit/user_state.dart';
 import 'package:my_auth/screens/sign_in_screen.dart';
 import 'package:my_auth/screens/sign_up_screen.dart';
 import 'package:my_auth/screens/update_user_screen.dart';
+import 'package:my_auth/screens/welcome_screen.dart';
 
 import '../widgets/custom_form_button.dart';
 
@@ -25,11 +26,19 @@ class ProfileScreen extends StatelessWidget {
                 .showSnackBar(SnackBar(content: Text(state.message)));
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+              MaterialPageRoute(builder: (context) => const WelcomeScreen()),
             );
           } else if (state is LogOutFailure) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.errMessage)));
+          }
+          if(state is DeleteFailure){
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errMessage)));
+          }else if(state is DeleteSuccess){
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.message)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> const WelcomeScreen()));
           }
         },
         builder: (context, state) {
@@ -76,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                             title: Text(state.user.address['type']),
                             leading: Icon(Icons.location_city),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 30),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
                             child: CustomFormButton(
@@ -90,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 25),
                           state is LogOutLoading
                               ? const CircularProgressIndicator()
                               : Padding(
@@ -100,6 +109,19 @@ class ProfileScreen extends StatelessWidget {
                                     innerText: 'Log Out',
                                     onPressed: () {
                                       context.read<UserCubit>().logOut();
+                                    },
+                                  ),
+                                ),
+                          const SizedBox(height: 25),
+                          state is DeleteLoading
+                              ? const CircularProgressIndicator()
+                              : Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: CustomFormButton(
+                                    innerText: 'Delete My Account',
+                                    onPressed: () {
+                                      context.read<UserCubit>().deleteUser();
                                     },
                                   ),
                                 ),

@@ -81,3 +81,17 @@ class LogOutFailure extends UserState {
 
   LogOutFailure({required this.errMessage});
 }
+
+//-**-***-*-*--*-*-*-*-*-*-*-**--*-*-*-*---*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*--*-*-*-*--*-*-*
+class DeleteLoading extends UserState{}
+class DeleteSuccess extends UserState{
+  final String message;
+
+  DeleteSuccess({required this.message});
+}
+class DeleteFailure extends UserState{
+  final String errMessage ;
+
+  DeleteFailure({required this.errMessage});
+
+}

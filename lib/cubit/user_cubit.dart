@@ -7,6 +7,7 @@ import 'package:my_auth/cubit/user_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_auth/models/delete_user_model.dart';
 import 'package:my_auth/models/logOut_model.dart';
 import 'package:my_auth/models/signIn_model.dart';
 import 'package:my_auth/models/signUp_model.dart';
@@ -157,4 +158,19 @@ class UserCubit extends Cubit<UserState> {
       emit(LogOutFailure(errMessage: e.errorModel.errorMessage));
     }
   }
+  
+  deleteUser()async{
+    try {
+      emit(DeleteLoading());
+      final response = await api.delete(EndPoint.delete,queryParameters: {
+        ApiKeys.id : CacheHelper().getData(key: ApiKeys.id)
+      },);
+      final DeleteModel deleteModel = DeleteModel.fromJson(response);
+      emit(DeleteSuccess(message: deleteModel.message ));
+    } on ServerException catch (e) {
+     emit(DeleteFailure(errMessage: e.errorModel.errorMessage));
+    }
+  }
+  
+  
 }
