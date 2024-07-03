@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_auth/cubit/user_state.dart';
 import 'package:my_auth/screens/sign_in_screen.dart';
+import 'package:my_auth/screens/welcome_screen.dart';
 import '../cubit/user_cubit.dart';
 import '../widgets/already_have_an_account_widget.dart';
 import '../widgets/custom_form_button.dart';
@@ -27,7 +28,7 @@ class SignUpScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const SignInScreen(),
+                builder: (context) => const WelcomeScreen(),
               ),
             );
           } else if (state is SignUpFailure) {
